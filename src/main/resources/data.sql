@@ -1,0 +1,5 @@
+insert into application_user (id, username,name,hashed_password,profile_picture) values ('5765f459-7200-4107-9c4a-d4ad68e1db1f','user','John Normal','$2a$10$xdbKoM48VySZqVSU/cSlVeJn0Z04XCZ7KZBjUBC00eKo5uLswyOpe','')
+insert into user_roles (user_id, roles) values ('5765f459-7200-4107-9c4a-d4ad68e1db1f', 'USER')
+insert into application_user (id, username,name,hashed_password,profile_picture) values ('6df4ed7c-2b06-4766-b62a-b9a648d56cc9','admin','Emma Powerful','$2a$10$jpLNVNeA7Ar/ZQ2DKbKCm.MuT2ESe.Qop96jipKMq7RaUgCoQedV.','')
+insert into user_roles (user_id, roles) values ('6df4ed7c-2b06-4766-b62a-b9a648d56cc9', 'USER')
+insert into user_roles (user_id, roles) values ('6df4ed7c-2b06-4766-b62a-b9a648d56cc9', 'ADMIN')
