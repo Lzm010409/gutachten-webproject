@@ -39,6 +39,7 @@ public class NeuerAuftragView extends VerticalLayout {
         content.setSizeFull();
         VerticalLayout verticalLayout = new VerticalLayout(header,content);
         return verticalLayout;
+        //TEST
 
     }
 
