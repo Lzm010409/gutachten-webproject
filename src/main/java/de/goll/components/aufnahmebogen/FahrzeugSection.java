@@ -7,9 +7,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 
-import java.awt.*;
 
 public class FahrzeugSection extends FormLayout {
 
@@ -48,12 +48,15 @@ public class FahrzeugSection extends FormLayout {
     private RadioButtonGroup<String> bodyCondition = new RadioButtonGroup("Karosseriezustand");
     private RadioButtonGroup<String> colorCondition = new RadioButtonGroup("Lackzustand");
     private RadioButtonGroup<String> visitCondition = new RadioButtonGroup("Besichtigungszustand");
-   /* private TextArea equipment = new TextArea("Ausstattung");
+    private TextArea equipment = new TextArea("Ausstattung");
     private TextArea fixedDamages = new TextArea("Beh. Vorschäden");
-    private RadioButtonGroup<String> fixedMinorDamages = new RadioButtonGroup<>();
+    private RadioButtonGroup<String> fixedMinorDamages = new RadioButtonGroup<>("Reparierte geringfügige Schäden");
     private TextArea notFixedDamages = new TextArea("Nicht beh. Vorschäden");
-    private RadioButtonGroup<String> notFixedMinorDamages = new RadioButtonGroup<>();
-    private RadioButtonGroup<String> colorThickness = new RadioButtonGroup<>();*/
+    private RadioButtonGroup<String> notFixedMinorDamages = new RadioButtonGroup<>("Nicht reparierte geringfügige Schäden");
+    private RadioButtonGroup<String> colorThickness = new RadioButtonGroup<>("Lackschichtdickenmessung");
+    private RadioButtonGroup<String> empty = new RadioButtonGroup();
+    private VerticalLayout notFixed = new VerticalLayout();
+    private VerticalLayout fixed = new VerticalLayout();
 
 
     public FahrzeugSection() {
@@ -62,17 +65,19 @@ public class FahrzeugSection extends FormLayout {
         configureBodyCondition();
         configureDriveType();
         configureFuel();
-        configureFuel();
         configureColorCondition();
         configureEnviromentalBadge();
         configureGeneralCondition();
         configureMileageReadType();
         configureVehcilePapers();
         configureVehicleColor();
+        configureFixedMinorDamages();
+        configureNotFixedMinorDamages();
+        configureColorThickness();
+        configureTextAreas();
         add(emailWorkShop,
                 visitPlace,
                 visitDate,
-
                 telWorkShop,
                 workShopContactPerson,
                 visitContactPerson,
@@ -104,7 +109,15 @@ public class FahrzeugSection extends FormLayout {
                 bodyCondition,
                 preOwner,
                 colorCondition,
-                visitCondition
+                empty,
+                visitCondition,
+                notFixedDamages,
+                fixedDamages,
+                notFixedMinorDamages,
+                fixedMinorDamages,
+                colorThickness
+
+
         );
     }
 
@@ -125,8 +138,8 @@ public class FahrzeugSection extends FormLayout {
     }
 
     private void configureDriveType() {
-        mileageReadType.setItems("2WD", "4WD");
-        mileageReadType.setValue("2WD");
+        driveType.setItems("2WD", "4WD");
+        driveType.setValue("2WD");
     }
 
     private void configureEnviromentalBadge() {
@@ -160,24 +173,23 @@ public class FahrzeugSection extends FormLayout {
     }
 
     private void configureNotFixedMinorDamages() {
-        visitCondition.setItems("Gebrauchsspuren", "Hagel", "Keine");
+        notFixedMinorDamages.setItems("Gebrauchsspuren", "Hagel", "Keine");
     }
 
     private void configureFixedMinorDamages() {
-        visitCondition.setItems("keine festgestellt", "Hagel", "lt. Angabe", "festgestellt");
+        fixedMinorDamages.setItems("keine festgestellt", "Hagel", "lt. Angabe", "festgestellt");
     }
 
     private void configureColorThickness() {
-        visitCondition.setItems("Ja", "Nein");
-        visitCondition.setValue("Nein");
+        colorThickness.setItems("Ja", "Nein");
+        colorThickness.setValue("Nein");
     }
 
-  /*  private Component createVehicleDamageSection() {
-        HorizontalLayout horizontalLayout;
-        VerticalLayout fixed = new VerticalLayout(fixedMinorDamages, colorThickness);
-        horizontalLayout = new HorizontalLayout(notFixedMinorDamages, fixed);
-        return horizontalLayout;
-    }*/
+    private void configureTextAreas(){
+        fixedDamages.setHeight("300px");
+        notFixedDamages.setHeight("300px");
+    }
+
 
 }
 
