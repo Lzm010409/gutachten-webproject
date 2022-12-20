@@ -1,7 +1,7 @@
 package de.goll.data.service;
 
 import de.goll.data.entity.Auftrag;
-import de.goll.data.entity.Kunde;
+import de.goll.data.entity.Fahrzeug;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,20 +11,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class KundeService {
+public class FahrzeugService {
 
-    private final KundeRepository repository;
+    private final FahrzeugRepository repository;
 
     @Autowired
-    public KundeService(KundeRepository repository) {
+    public FahrzeugService(FahrzeugRepository repository) {
         this.repository = repository;
     }
 
-    public Optional<Kunde> get(UUID id) {
+    public Optional<Fahrzeug> get(UUID id) {
         return repository.findById(id);
     }
 
-    public Kunde update(Kunde entity) {
+    public Fahrzeug update(Fahrzeug entity) {
         return repository.save(entity);
     }
 
@@ -32,7 +32,7 @@ public class KundeService {
         repository.deleteById(id);
     }
 
-    public Page<Kunde> list(Pageable pageable) {
+    public Page<Fahrzeug> list(Pageable pageable) {
         return repository.findAll(pageable);
     }
 

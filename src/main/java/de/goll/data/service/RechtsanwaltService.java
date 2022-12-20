@@ -20,7 +20,7 @@ public class RechtsanwaltService {
         this.repository = repository;
     }
 
-    public Optional<Rechtsanwalt> get(Long id) {
+    public Optional<Rechtsanwalt> get(UUID id) {
         return repository.findById(id);
     }
 
@@ -28,7 +28,7 @@ public class RechtsanwaltService {
         return repository.save(entity);
     }
 
-    public void delete(Long id) {
+    public void delete(UUID id) {
         repository.deleteById(id);
     }
 

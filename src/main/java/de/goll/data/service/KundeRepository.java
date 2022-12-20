@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface KundeRepository extends JpaRepository<Kunde, Long> {
+public interface KundeRepository extends JpaRepository<Kunde, UUID> {
 
     Kunde findKundeByName(String name);
 }

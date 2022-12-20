@@ -20,7 +20,7 @@ public class AuftragService {
         this.repository = repository;
     }
 
-    public Optional<Auftrag> get(Long id) {
+    public Optional<Auftrag> get(UUID id) {
         return repository.findById(id);
     }
 
@@ -28,7 +28,7 @@ public class AuftragService {
         return repository.save(entity);
     }
 
-    public void delete(Long id) {
+    public void delete(UUID id) {
         repository.deleteById(id);
     }
 

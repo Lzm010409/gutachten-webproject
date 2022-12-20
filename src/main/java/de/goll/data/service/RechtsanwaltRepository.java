@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface RechtsanwaltRepository extends JpaRepository<Rechtsanwalt, Long> {
+public interface RechtsanwaltRepository extends JpaRepository<Rechtsanwalt, UUID> {
 
     Rechtsanwalt findRechtsanwaltByName(String name);
 }

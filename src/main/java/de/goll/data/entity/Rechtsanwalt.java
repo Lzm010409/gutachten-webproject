@@ -8,10 +8,8 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "application_rechtsanwaelte")
-public class Rechtsanwalt {
-    @Id
-    @GeneratedValue
-    private long id;
+public class Rechtsanwalt extends AbstractEntity {
+
     @NotBlank
     private String name;
 

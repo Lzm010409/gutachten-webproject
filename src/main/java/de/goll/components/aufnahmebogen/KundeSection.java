@@ -28,4 +28,59 @@ public class KundeSection extends FormLayout {
         );
     }
 
+    public ComboBox<String> getGender() {
+        return gender;
+    }
+
+    public void setGender(ComboBox<String> gender) {
+        this.gender = gender;
+    }
+
+    public TextField getName() {
+        return name;
+    }
+
+    public void setName(TextField name) {
+        this.name = name;
+    }
+
+    public TextField getStreet() {
+        return street;
+    }
+
+    public void setStreet(TextField street) {
+        this.street = street;
+    }
+
+    public TextField getZip() {
+        return zip;
+    }
+
+    public void setZip(TextField zip) {
+        this.zip = zip;
+    }
+
+    public TextField getCity() {
+        return city;
+    }
+
+    public void setCity(TextField city) {
+        this.city = city;
+    }
+
+    public TextField getTel() {
+        return tel;
+    }
+
+    public void setTel(TextField tel) {
+        this.tel = tel;
+    }
+
+    public EmailField getMail() {
+        return mail;
+    }
+
+    public void setMail(EmailField mail) {
+        this.mail = mail;
+    }
 }

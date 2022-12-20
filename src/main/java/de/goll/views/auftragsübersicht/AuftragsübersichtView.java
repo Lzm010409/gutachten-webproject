@@ -37,7 +37,7 @@ public class AuftragsübersichtView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("contact-grid");
         grid.setSizeFull();
-        grid.setColumns("auftragsNummer", "kunde", "rechtsanwalt");
+        grid.setColumns("auftragsNummer", "kundeName", "rechtsanwaltName");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
     }
 

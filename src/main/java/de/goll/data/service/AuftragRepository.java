@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface AuftragRepository extends JpaRepository<Auftrag, Long> {
+public interface AuftragRepository extends JpaRepository<Auftrag, UUID> {
 
     Auftrag findAuftragByAuftragsNummer(String name);
 }
