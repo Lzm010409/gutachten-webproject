@@ -1,9 +1,12 @@
 package de.goll.components.aufnahmebogen;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -11,6 +14,9 @@ import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.Binder;
+import de.goll.data.entity.Auftrag;
 
 public class SchadenSection extends FormLayout {
 
@@ -34,13 +40,21 @@ public class SchadenSection extends FormLayout {
 
 
     public SchadenSection() {
+        Button save = new Button("Sichern");
+        Button delete = new Button("Löschen");
+        Button cancel = new Button("Abbrechen");
+        save.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        HorizontalLayout horizontalLayout = new HorizontalLayout(save, delete, cancel);
+        H2 header = new H2("Schadendetails");
         configureSave();
         configureDamagePlausibility();
         configureReplacementValueEvaluation();
         configureDamageCourseStatement();
         configureTextAreas();
 
-        add(
+        add(header, horizontalLayout,
                 damageCourse,
                 particularities,
                 damageCourseStatement,
@@ -51,7 +65,6 @@ public class SchadenSection extends FormLayout {
                 replacementValue,
                 repairDuration,
                 replacementValueEvaluation,
-                save,
                 replacementDuration,
                 lossOfUseGroup,
                 rentalClass,
@@ -97,7 +110,7 @@ public class SchadenSection extends FormLayout {
         replacementValueEvaluation.setValue("gegeben");
     }
 
-    private void configureTextAreas(){
+    private void configureTextAreas() {
         damageDescription.setHeight("250px");
         damageCourse.setHeight("250px");
         particularities.setHeight("250px");
@@ -239,4 +252,6 @@ public class SchadenSection extends FormLayout {
     public void setEmpty(RadioButtonGroup<String> empty) {
         this.empty = empty;
     }
+
+
 }

@@ -22,7 +22,7 @@ import de.goll.components.appnav.AppNavItem;
 import de.goll.data.entity.User;
 import de.goll.data.security.AuthenticatedUser;
 import de.goll.views.auftragsübersicht.AuftragsübersichtView;
-import de.goll.views.neuerauftrag.NeuerAuftragView;
+import de.goll.views.neuerauftrag.AuftragView;
 import java.io.ByteArrayInputStream;
 import java.util.Optional;
 
@@ -74,8 +74,8 @@ public class MainLayout extends AppLayout {
             nav.addItem(new AppNavItem("Auftragsübersicht", AuftragsübersichtView.class, "la la-list"));
 
         }
-        if (accessChecker.hasAccess(NeuerAuftragView.class)) {
-            nav.addItem(new AppNavItem("Neuer Auftrag", NeuerAuftragView.class, "la la-file"));
+        if (accessChecker.hasAccess(AuftragView.class)) {
+            nav.addItem(new AppNavItem("Neuer Auftrag", AuftragView.class, "la la-file"));
 
         }
 

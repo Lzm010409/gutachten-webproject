@@ -27,11 +27,11 @@ public class Fahrzeug extends AbstractEntity {
     private String displacement;
     private String nextHU;
     private String nextSP;
-    private int generalCount;
-    private int bodyCount;
-    private int preOwner;
-    private int colorCount;
-    private int visitCount;
+    private double generalCount;
+    private double bodyCount;
+    private String preOwner;
+    private double colorCount;
+    private double visitCount;
     private String equipment;
     private String notFixedDamages;
     private String fixedDamages;
@@ -193,43 +193,43 @@ public class Fahrzeug extends AbstractEntity {
         this.nextSP = nextSP;
     }
 
-    public int getGeneralCount() {
+    public double getGeneralCount() {
         return generalCount;
     }
 
-    public void setGeneralCount(int generalCount) {
+    public void setGeneralCount(double generalCount) {
         this.generalCount = generalCount;
     }
 
-    public int getBodyCount() {
+    public double getBodyCount() {
         return bodyCount;
     }
 
-    public void setBodyCount(int bodyCount) {
+    public void setBodyCount(double bodyCount) {
         this.bodyCount = bodyCount;
     }
 
-    public int getPreOwner() {
+    public String getPreOwner() {
         return preOwner;
     }
 
-    public void setPreOwner(int preOwner) {
+    public void setPreOwner(String preOwner) {
         this.preOwner = preOwner;
     }
 
-    public int getColorCount() {
+    public double getColorCount() {
         return colorCount;
     }
 
-    public void setColorCount(int colorCount) {
+    public void setColorCount(double colorCount) {
         this.colorCount = colorCount;
     }
 
-    public int getVisitCount() {
+    public double getVisitCount() {
         return visitCount;
     }
 
-    public void setVisitCount(int visitCount) {
+    public void setVisitCount(double visitCount) {
         this.visitCount = visitCount;
     }
 

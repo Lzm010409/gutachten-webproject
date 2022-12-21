@@ -1,14 +1,25 @@
 package de.goll.components.aufnahmebogen;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.shared.Registration;
+import de.goll.data.entity.Fahrzeug;
 
 
 public class FahrzeugSection extends FormLayout {
@@ -58,8 +69,20 @@ public class FahrzeugSection extends FormLayout {
     private VerticalLayout notFixed = new VerticalLayout();
     private VerticalLayout fixed = new VerticalLayout();
 
+    private Fahrzeug fahrzeug = new Fahrzeug();
+
+    Binder<Fahrzeug> fahrzeugBinder = new BeanValidationBinder<>(Fahrzeug.class);
 
     public FahrzeugSection() {
+        Button save = new Button("Sichern");
+        Button delete = new Button("Löschen");
+        Button cancel = new Button("Abbrechen");
+        save.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        HorizontalLayout horizontalLayout = new HorizontalLayout(save, delete, cancel);
+        H2 header = new H2("Fahrzeugdetails");
+        fahrzeugBinder.bindInstanceFields(this);
         addClassName("fahrzeug-section");
         configureVisitCondition();
         configureBodyCondition();
@@ -75,7 +98,7 @@ public class FahrzeugSection extends FormLayout {
         configureNotFixedMinorDamages();
         configureColorThickness();
         configureTextAreas();
-        add(emailWorkShop,
+        add(header, horizontalLayout, emailWorkShop,
                 visitPlace,
                 visitDate,
                 telWorkShop,
@@ -185,7 +208,7 @@ public class FahrzeugSection extends FormLayout {
         colorThickness.setValue("Nein");
     }
 
-    private void configureTextAreas(){
+    private void configureTextAreas() {
         fixedDamages.setHeight("300px");
         notFixedDamages.setHeight("300px");
     }
@@ -540,6 +563,58 @@ public class FahrzeugSection extends FormLayout {
 
     public void setFixed(VerticalLayout fixed) {
         this.fixed = fixed;
+    }
+
+
+    public void setFahrzeug(Fahrzeug fahrzeug) {
+        this.fahrzeug = fahrzeug;
+        fahrzeugBinder.readBean(fahrzeug);
+    }
+
+    public static abstract class FahrzeugSectionEvent extends ComponentEvent<FahrzeugSection> {
+        private Fahrzeug fahrzeug;
+
+        protected FahrzeugSectionEvent(FahrzeugSection source, Fahrzeug fahrzeug) {
+            super(source, false);
+            this.fahrzeug = fahrzeug;
+        }
+
+        public Fahrzeug getFahrzeug() {
+            return fahrzeug;
+        }
+    }
+
+    public static class SaveFahrzeugEvent extends FahrzeugSectionEvent {
+        SaveFahrzeugEvent(FahrzeugSection source, Fahrzeug fahrzeug) {
+            super(source, fahrzeug);
+        }
+    }
+
+
+    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
+                                                                  ComponentEventListener<T> listener) {
+        return getEventBus().addListener(eventType, listener);
+    }
+
+    public void validateAndSaveFahrzeug() {
+        try {
+            fahrzeugBinder.writeBean(fahrzeug);
+            fireEvent(new SaveFahrzeugEvent(this, fahrzeug));
+        } catch (ValidationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Fahrzeug getFahrzeug() {
+        return fahrzeug;
+    }
+
+    public Binder<Fahrzeug> getFahrzeugBinder() {
+        return fahrzeugBinder;
+    }
+
+    public void setFahrzeugBinder(Binder<Fahrzeug> fahrzeugBinder) {
+        this.fahrzeugBinder = fahrzeugBinder;
     }
 }
 

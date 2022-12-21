@@ -1,6 +1,5 @@
 package de.goll.views.neuerauftrag;
 
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.router.PageTitle;
@@ -18,26 +17,32 @@ import javax.annotation.security.RolesAllowed;
 @PageTitle("Neuer Auftrag")
 @Route(value = "neuerauftrag", layout = MainLayout.class)
 @RolesAllowed("USER")
-public class NeuerAuftragView extends VerticalLayout {
+public class AuftragView extends VerticalLayout {
+    HeadSection headSection = new HeadSection();
+    KundeSection kundeSection = new KundeSection();
+    FahrzeugSection fahrzeugSection = new FahrzeugSection();
+    SchadenSection schadenSection = new SchadenSection();
     AuftragService auftragService;
     KundeService kundeService;
     RechtsanwaltService rechtsanwaltService;
     FahrzeugService fahrzeugService;
 
-    AufnahmebogenSection aufnahmebogenSection = new AufnahmebogenSection();
     AbtrittserklärungSection abtrittserklärungSection = new AbtrittserklärungSection();
 
-    public NeuerAuftragView(AuftragService auftragService,
-                            KundeService kundeService,
-                            RechtsanwaltService rechtsanwaltService,
-                            FahrzeugService fahrzeugService) {
+    public AuftragView(AuftragService auftragService,
+                       KundeService kundeService,
+                       RechtsanwaltService rechtsanwaltService,
+                       FahrzeugService fahrzeugService) {
         this.auftragService = auftragService;
         this.kundeService = kundeService;
         this.rechtsanwaltService = rechtsanwaltService;
         this.fahrzeugService = fahrzeugService;
 
         TabSheet tabSheet = new TabSheet();
-        tabSheet.add("Aufnahmebogen", aufnahmebogenSection.createAufnahmebogenSection());
+        tabSheet.add("Auftragsdetails", headSection);
+        tabSheet.add("Kundendetails", kundeSection);
+        tabSheet.add("Fahrzeugdetails", fahrzeugSection);
+        tabSheet.add("Schadendetails", schadenSection);
         tabSheet.add("Abtrittserklärung", abtrittserklärungSection.configureAbtrittserklärungSection());
         add(tabSheet);
     }
