@@ -1,15 +1,19 @@
 package de.goll.data.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.UUID;
 
 @Entity
 @Table(name = "application_kunde")
-public class Kunde extends AbstractEntity{
-
+public class Kunde {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "KundeUUID", updatable = false, nullable = false)
+    @Type(type = "uuid-char")
+    private UUID id;
     @NotBlank
     private String name;
 
@@ -30,6 +34,14 @@ public class Kunde extends AbstractEntity{
 
     public Kunde(){
 
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getName() {

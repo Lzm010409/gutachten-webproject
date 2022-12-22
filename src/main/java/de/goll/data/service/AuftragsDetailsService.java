@@ -1,8 +1,7 @@
 package de.goll.data.service;
 
 import de.goll.data.entity.Auftrag;
-import de.goll.data.entity.Fahrzeug;
-import de.goll.data.entity.User;
+import de.goll.data.entity.Auftragsdetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,20 +11,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class AuftragService {
+public class AuftragsDetailsService {
 
-    private final AuftragRepository repository;
+    private final AuftragsDetailsRepository repository;
 
     @Autowired
-    public AuftragService(AuftragRepository repository) {
+    public AuftragsDetailsService(AuftragsDetailsRepository repository) {
         this.repository = repository;
     }
 
-    public Optional<Auftrag> get(UUID id) {
+    public Optional<Auftragsdetails> get(UUID id) {
         return repository.findById(id);
     }
 
-    public Auftrag update(Auftrag entity) {
+    public Auftragsdetails update(Auftragsdetails entity) {
         return repository.save(entity);
     }
 
@@ -33,7 +32,7 @@ public class AuftragService {
         repository.deleteById(id);
     }
 
-    public Page<Auftrag> list(Pageable pageable) {
+    public Page<Auftragsdetails> list(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
@@ -41,12 +40,12 @@ public class AuftragService {
         return (int) repository.count();
     }
 
-    public void saveAuftrag(Auftrag auftrag) {
-        if (auftrag == null) {
+    public void saveAuftragdetails(Auftragsdetails auftragsdetails) {
+        if (auftragsdetails == null) {
             System.err.println("Contact is null. Are you sure you have connected your form to the application?");
             return;
         }
-        repository.save(auftrag);
+        repository.save(auftragsdetails);
     }
 
 }

@@ -1,9 +1,12 @@
 package de.goll.components.aufnahmebogen;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
@@ -16,10 +19,19 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
-import de.goll.data.entity.Auftrag;
+import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.shared.Registration;
+import de.goll.data.entity.Auftragsdetails;
+import de.goll.data.entity.Rechtsanwalt;
 
-public class SchadenSection extends FormLayout {
+public class AuftragsdetailsSection extends FormLayout {
 
+    private DatePicker auftragsDatum = new DatePicker("Auftragsdatum");
+    private DatePicker schadenDatum = new DatePicker("Schadendatum");
+    private TextField schadenOrt = new TextField("Schadenort");
+    private TextField gutachtenNummer = new TextField("Gutachtennummer");
+    private TextField schadennummer = new TextField("VU/Schadennummer");
+    private TextField kennzeichenUG = new TextField("Kennezeichen-UG");
     private TextArea damageCourse = new TextArea("Schadenhergang");
     private RadioButtonGroup<String> damageCourseStatement = new RadioButtonGroup<>("Schadenhergang laut");
     private RadioButtonGroup<String> damagePlausibility = new RadioButtonGroup<>("Schadenhergang plausibel");
@@ -30,31 +42,52 @@ public class SchadenSection extends FormLayout {
     private TextArea damageDescription = new TextArea("Schadenbeschreibung");
     private NumberField replacementValue = new NumberField("Wiederbeschaffungswert");
     private NumberField repairDuration = new NumberField("Reparaturdauer");
-    private RadioButtonGroup<String> save = new RadioButtonGroup<>("Verkehrssicher");
+    private RadioButtonGroup<String> vehicleSave = new RadioButtonGroup<>("Verkehrssicher");
     private RadioButtonGroup<String> replacementValueEvaluation = new RadioButtonGroup<>("Wiederbeschaffungswert Ermittlungsmethode");
     private NumberField replacementDuration = new NumberField("Wiederbeschaffungsdauer");
     private ComboBox<String> lossOfUseGroup = new ComboBox<>("Nutzungsausfall-Gruppe");
     private TextField rentalClass = new TextField("Mietwagenklasse");
     private TextArea comments = new TextArea("Kommentare");
     private RadioButtonGroup<String> empty = new RadioButtonGroup();
+    Button save = new Button("Sichern");
+    Button delete = new Button("Löschen");
+    Button cancel = new Button("Abbrechen");
+
+    Binder<Auftragsdetails> auftragsdetailsBinder = new BeanValidationBinder<>(Auftragsdetails.class);
+    Auftragsdetails auftragsdetails;
+
+    public AuftragsdetailsSection() {
+        auftragsdetailsBinder.bindInstanceFields(this);
+        H2 header = new H2("Auftragsdetails");
 
 
-    public SchadenSection() {
-        Button save = new Button("Sichern");
-        Button delete = new Button("Löschen");
-        Button cancel = new Button("Abbrechen");
+        addClassName("head-section");
+        add(header,
+                createButtonLayout(),
+                auftragsDatum,
+                schadenDatum,
+                schadenOrt,
+                gutachtenNummer,
+                schadennummer,
+                kennzeichenUG
+        );
+    }
+
+    public Component createButtonLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         HorizontalLayout horizontalLayout = new HorizontalLayout(save, delete, cancel);
-        H2 header = new H2("Schadendetails");
-        configureSave();
-        configureDamagePlausibility();
-        configureReplacementValueEvaluation();
-        configureDamageCourseStatement();
-        configureTextAreas();
+        save.addClickListener(buttonClickEvent -> validateAndSaveAuftrag());
+        auftragsdetailsBinder.addStatusChangeListener(e -> save.setEnabled(auftragsdetailsBinder.isValid()));
 
-        add(header, horizontalLayout,
+        return horizontalLayout;
+    }
+
+    public FormLayout createSchadenDetails() {
+        H2 header = new H2("Schadendetails");
+        FormLayout formLayout = new FormLayout();
+        formLayout.add(header,
                 damageCourse,
                 particularities,
                 damageCourseStatement,
@@ -70,9 +103,11 @@ public class SchadenSection extends FormLayout {
                 rentalClass,
                 empty,
                 comments
-
         );
+
+        return formLayout;
     }
+
 
 
     private Component configureImpairment() {
@@ -90,6 +125,90 @@ public class SchadenSection extends FormLayout {
         return verticalLayout;
     }
 
+
+    public static abstract class AuftragsdetailsSectionEvent extends ComponentEvent<AuftragsdetailsSection> {
+        private Auftragsdetails auftrag;
+
+        protected AuftragsdetailsSectionEvent(AuftragsdetailsSection source, Auftragsdetails auftrag) {
+            super(source, false);
+            this.auftrag = auftrag;
+        }
+
+        public Auftragsdetails getAuftragsdetails() {
+            return auftrag;
+        }
+    }
+
+    public static class SaveAuftragdetailsEvent extends AuftragsdetailsSectionEvent {
+        SaveAuftragdetailsEvent(AuftragsdetailsSection source, Auftragsdetails auftrag) {
+            super(source, auftrag);
+        }
+    }
+
+
+    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
+                                                                  ComponentEventListener<T> listener) {
+        return getEventBus().addListener(eventType, listener);
+    }
+
+    public void validateAndSaveAuftrag() {
+        try {
+            auftragsdetailsBinder.writeBean(auftragsdetails);
+            fireEvent(new SaveAuftragdetailsEvent(this, auftragsdetails));
+        } catch (ValidationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public DatePicker getAuftragsDatum() {
+        return auftragsDatum;
+    }
+
+    public void setAuftragsDatum(DatePicker auftragsDatum) {
+        this.auftragsDatum = auftragsDatum;
+    }
+
+    public DatePicker getSchadenDatum() {
+        return schadenDatum;
+    }
+
+    public void setSchadenDatum(DatePicker schadenDatum) {
+        this.schadenDatum = schadenDatum;
+    }
+
+    public TextField getSchadenOrt() {
+        return schadenOrt;
+    }
+
+    public void setSchadenOrt(TextField schadenOrt) {
+        this.schadenOrt = schadenOrt;
+    }
+
+    public TextField getGutachtenNummer() {
+        return gutachtenNummer;
+    }
+
+    public void setGutachtenNummer(TextField gutachtenNummer) {
+        this.gutachtenNummer = gutachtenNummer;
+    }
+
+    public TextField getSchadennummer() {
+        return schadennummer;
+    }
+
+    public void setSchadennummer(TextField schadennummer) {
+        this.schadennummer = schadennummer;
+    }
+
+    public TextField getKennzeichenUG() {
+        return kennzeichenUG;
+    }
+
+    public void setKennzeichenUG(TextField kennzeichenUG) {
+        this.kennzeichenUG = kennzeichenUG;
+    }
+
+
     private void configureDamageCourseStatement() {
         damageCourseStatement.setItems("VN", "AS", "Werkstatt", "Eigene Aussage");
         damageCourseStatement.setValue("AS");
@@ -101,8 +220,8 @@ public class SchadenSection extends FormLayout {
     }
 
     private void configureSave() {
-        save.setItems("Gegeben", "Nicht gegeben");
-        save.setValue("gegeben");
+        vehicleSave.setItems("Gegeben", "Nicht gegeben");
+        vehicleSave.setValue("gegeben");
     }
 
     private void configureReplacementValueEvaluation() {
@@ -197,12 +316,12 @@ public class SchadenSection extends FormLayout {
         this.repairDuration = repairDuration;
     }
 
-    public RadioButtonGroup<String> getSave() {
-        return save;
+    public RadioButtonGroup<String> getVehicleSave() {
+        return vehicleSave;
     }
 
-    public void setSave(RadioButtonGroup<String> save) {
-        this.save = save;
+    public void setVehicleSave(RadioButtonGroup<String> vehicleSave) {
+        this.vehicleSave = vehicleSave;
     }
 
     public RadioButtonGroup<String> getReplacementValueEvaluation() {
@@ -252,6 +371,8 @@ public class SchadenSection extends FormLayout {
     public void setEmpty(RadioButtonGroup<String> empty) {
         this.empty = empty;
     }
+
+
 
 
 }

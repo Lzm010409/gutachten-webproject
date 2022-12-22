@@ -5,14 +5,11 @@ import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -20,25 +17,28 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
 import de.goll.data.entity.Fahrzeug;
+import de.goll.data.service.FahrzeugService;
 
 
 public class FahrzeugSection extends FormLayout {
 
-    private TextField visitPlace = new TextField("Besichtigungsort");
+    /*private TextField visitPlace = new TextField("Besichtigungsort");
     private DateTimePicker visitDate = new DateTimePicker("Besichtigungsdatum & Uhrzeit");
     private EmailField emailWorkShop = new EmailField("E-Mail - Werkstatt");
     private TextField telWorkShop = new TextField("Telefon - Werkstatt");
     private TextField workShopContactPerson = new TextField("Ansprechpartner - Werkstatt");
     private TextField visitContactPerson = new TextField("Anwesend bei Besichtigung");
+    */
     private TextField licensePlate = new TextField("Kennzeichen");
+
     private TextField vehicleKind = new TextField("Fahrzeug-Art");
-    private TextField vehicleManufactur = new TextField("Hersteller");
+    private TextField manufacturer = new TextField("Hersteller");
     private TextField vehicleType = new TextField("Fahrzeug-Typ");
     private TextField hsntsn = new TextField("HSN/TSN");
     private RadioButtonGroup<String> vehiclePapers = new RadioButtonGroup("Papiere");
     private TextField fin = new TextField("FIN");
-    private TextField vehicleFirstAdmission = new TextField("erste Zulassung");
-    private TextField vehicleLastAdmission = new TextField("letzte Zulassung");
+    private TextField firstAdmission = new TextField("erste Zulassung");
+    private TextField lastAdmission = new TextField("letzte Zulassung");
     private TextField power = new TextField("Leistung in Kw");
     private TextField displacement = new TextField("Hubraum");
     private TextField hu = new TextField("HU");
@@ -49,16 +49,16 @@ public class FahrzeugSection extends FormLayout {
     private RadioButtonGroup<String> vehicleColor = new RadioButtonGroup("Fahrzeug Farbe");
     private TextField frontTire = new TextField("Vorderreifen");
     private TextField rearTire = new TextField("Hinterreifen");
-    private TextField tireManufacture = new TextField("Reifen Hersteller");
+    private TextField tireManufacturer = new TextField("Reifen Hersteller");
     private TextField tireDepth = new TextField("Profiltiefe");
     private RadioButtonGroup<String> driveType = new RadioButtonGroup("Antriebsart");
     private RadioButtonGroup<String> enviromentalBadge = new RadioButtonGroup("Umweltplakette");
     private RadioButtonGroup<String> fuel = new RadioButtonGroup("Treibstoff");
     private TextField pollutantClass = new TextField("Schadstoffklasse");
-    private RadioButtonGroup<String> generalCondition = new RadioButtonGroup("Allgemeinzustand");
-    private RadioButtonGroup<String> bodyCondition = new RadioButtonGroup("Karosseriezustand");
-    private RadioButtonGroup<String> colorCondition = new RadioButtonGroup("Lackzustand");
-    private RadioButtonGroup<String> visitCondition = new RadioButtonGroup("Besichtigungszustand");
+    private RadioButtonGroup<Double> generalCondition = new RadioButtonGroup("Allgemeinzustand");
+    private RadioButtonGroup<Double> bodyCondition = new RadioButtonGroup("Karosseriezustand");
+    private RadioButtonGroup<Double> colorCondition = new RadioButtonGroup("Lackzustand");
+    private RadioButtonGroup<Double> visitCondition = new RadioButtonGroup("Besichtigungszustand");
     private TextArea equipment = new TextArea("Ausstattung");
     private TextArea fixedDamages = new TextArea("Beh. Vorschäden");
     private RadioButtonGroup<String> fixedMinorDamages = new RadioButtonGroup<>("Reparierte geringfügige Schäden");
@@ -70,17 +70,14 @@ public class FahrzeugSection extends FormLayout {
     private VerticalLayout fixed = new VerticalLayout();
 
     private Fahrzeug fahrzeug = new Fahrzeug();
+    Button save = new Button("Sichern");
+    Button delete = new Button("Löschen");
+    Button cancel = new Button("Abbrechen");
+
 
     Binder<Fahrzeug> fahrzeugBinder = new BeanValidationBinder<>(Fahrzeug.class);
 
     public FahrzeugSection() {
-        Button save = new Button("Sichern");
-        Button delete = new Button("Löschen");
-        Button cancel = new Button("Abbrechen");
-        save.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        HorizontalLayout horizontalLayout = new HorizontalLayout(save, delete, cancel);
         H2 header = new H2("Fahrzeugdetails");
         fahrzeugBinder.bindInstanceFields(this);
         addClassName("fahrzeug-section");
@@ -98,29 +95,29 @@ public class FahrzeugSection extends FormLayout {
         configureNotFixedMinorDamages();
         configureColorThickness();
         configureTextAreas();
-        add(header, horizontalLayout, emailWorkShop,
+        add(header, createButtonLayout(), /*emailWorkShop,
                 visitPlace,
                 visitDate,
                 telWorkShop,
                 workShopContactPerson,
-                visitContactPerson,
+                visitContactPerson,*/
                 licensePlate,
                 mileage,
                 vehicleKind,
                 mileageReadType,
-                vehicleManufactur,
+                manufacturer,
                 vehicleColor,
                 vehicleType,
                 frontTire,
                 hsntsn,
                 rearTire,
                 vehiclePapers,
-                tireManufacture,
+                tireManufacturer,
                 fin,
                 tireDepth,
-                vehicleFirstAdmission,
+                firstAdmission,
                 driveType,
-                vehicleLastAdmission,
+                lastAdmission,
                 enviromentalBadge,
                 power,
                 fuel,
@@ -144,6 +141,49 @@ public class FahrzeugSection extends FormLayout {
         );
     }
 
+    public Component createButtonLayout() {
+        save.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        HorizontalLayout horizontalLayout = new HorizontalLayout(save, delete, cancel);
+        save.addClickListener(buttonClickEvent -> validateAndSaveFahrzeug());
+        fahrzeugBinder.addStatusChangeListener(e -> save.setEnabled(fahrzeugBinder.isValid()));
+
+        return horizontalLayout;
+    }
+    public static abstract class FahrzeugSectionEvent extends ComponentEvent<FahrzeugSection> {
+        private Fahrzeug fahrzeug;
+
+        protected FahrzeugSectionEvent(FahrzeugSection source, Fahrzeug fahrzeug) {
+            super(source, false);
+            this.fahrzeug = fahrzeug;
+        }
+
+        public Fahrzeug getFahrzeug() {
+            return fahrzeug;
+        }
+    }
+
+    public static class SaveFahrzeugEvent extends FahrzeugSectionEvent {
+        SaveFahrzeugEvent(FahrzeugSection source, Fahrzeug fahrzeug) {
+            super(source, fahrzeug);
+        }
+    }
+
+
+    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
+                                                                  ComponentEventListener<T> listener) {
+        return getEventBus().addListener(eventType, listener);
+    }
+
+    public void validateAndSaveFahrzeug() {
+        try {
+            fahrzeugBinder.writeBean(fahrzeug);
+            fireEvent(new SaveFahrzeugEvent(this, fahrzeug));
+        } catch (ValidationException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void configureVehcilePapers() {
         vehiclePapers.setItems("Original", "Kopie", "Auftrag", "Keine");
@@ -176,23 +216,23 @@ public class FahrzeugSection extends FormLayout {
     }
 
     private void configureGeneralCondition() {
-        generalCondition.setItems("1", "2", "3", "4", "5");
-        generalCondition.setValue("2");
+        generalCondition.setItems(1.0,2.0,3.0,4.0,5.0);
+        generalCondition.setValue(2.0);
     }
 
     private void configureBodyCondition() {
-        bodyCondition.setItems("1", "2", "3", "4", "5");
-        bodyCondition.setValue("2");
+        bodyCondition.setItems(1.0,2.0,3.0,4.0,5.0);
+        bodyCondition.setValue(2.0);
     }
 
     private void configureColorCondition() {
-        colorCondition.setItems("1", "2", "3", "4", "5");
-        colorCondition.setValue("2");
+        colorCondition.setItems(1.0,2.0,3.0,4.0,5.0);
+        colorCondition.setValue(2.0);
     }
 
     private void configureVisitCondition() {
-        visitCondition.setItems("1", "2", "3", "4", "5");
-        visitCondition.setValue("2");
+        visitCondition.setItems(1.0,2.0,3.0,4.0,5.0);
+        visitCondition.setValue(2.0);
     }
 
     private void configureNotFixedMinorDamages() {
@@ -213,7 +253,7 @@ public class FahrzeugSection extends FormLayout {
         notFixedDamages.setHeight("300px");
     }
 
-    public TextField getVisitPlace() {
+    /*public TextField getVisitPlace() {
         return visitPlace;
     }
 
@@ -259,7 +299,7 @@ public class FahrzeugSection extends FormLayout {
 
     public void setVisitContactPerson(TextField visitContactPerson) {
         this.visitContactPerson = visitContactPerson;
-    }
+    }*/
 
     public TextField getLicensePlate() {
         return licensePlate;
@@ -277,12 +317,12 @@ public class FahrzeugSection extends FormLayout {
         this.vehicleKind = vehicleKind;
     }
 
-    public TextField getVehicleManufactur() {
-        return vehicleManufactur;
+    public TextField getManufacturer() {
+        return manufacturer;
     }
 
-    public void setVehicleManufactur(TextField vehicleManufactur) {
-        this.vehicleManufactur = vehicleManufactur;
+    public void setManufacturer(TextField manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     public TextField getVehicleType() {
@@ -317,20 +357,20 @@ public class FahrzeugSection extends FormLayout {
         this.fin = fin;
     }
 
-    public TextField getVehicleFirstAdmission() {
-        return vehicleFirstAdmission;
+    public TextField getFirstAdmission() {
+        return firstAdmission;
     }
 
-    public void setVehicleFirstAdmission(TextField vehicleFirstAdmission) {
-        this.vehicleFirstAdmission = vehicleFirstAdmission;
+    public void setFirstAdmission(TextField firstAdmission) {
+        this.firstAdmission = firstAdmission;
     }
 
-    public TextField getVehicleLastAdmission() {
-        return vehicleLastAdmission;
+    public TextField getLastAdmission() {
+        return lastAdmission;
     }
 
-    public void setVehicleLastAdmission(TextField vehicleLastAdmission) {
-        this.vehicleLastAdmission = vehicleLastAdmission;
+    public void setLastAdmission(TextField lastAdmission) {
+        this.lastAdmission = lastAdmission;
     }
 
     public TextField getPower() {
@@ -413,12 +453,12 @@ public class FahrzeugSection extends FormLayout {
         this.rearTire = rearTire;
     }
 
-    public TextField getTireManufacture() {
-        return tireManufacture;
+    public TextField getTireManufacturer() {
+        return tireManufacturer;
     }
 
-    public void setTireManufacture(TextField tireManufacture) {
-        this.tireManufacture = tireManufacture;
+    public void setTireManufacturer(TextField tireManufacturer) {
+        this.tireManufacturer = tireManufacturer;
     }
 
     public TextField getTireDepth() {
@@ -461,35 +501,35 @@ public class FahrzeugSection extends FormLayout {
         this.pollutantClass = pollutantClass;
     }
 
-    public RadioButtonGroup<String> getGeneralCondition() {
+    public RadioButtonGroup<Double> getGeneralCondition() {
         return generalCondition;
     }
 
-    public void setGeneralCondition(RadioButtonGroup<String> generalCondition) {
+    public void setGeneralCondition(RadioButtonGroup<Double> generalCondition) {
         this.generalCondition = generalCondition;
     }
 
-    public RadioButtonGroup<String> getBodyCondition() {
+    public RadioButtonGroup<Double> getBodyCondition() {
         return bodyCondition;
     }
 
-    public void setBodyCondition(RadioButtonGroup<String> bodyCondition) {
+    public void setBodyCondition(RadioButtonGroup<Double> bodyCondition) {
         this.bodyCondition = bodyCondition;
     }
 
-    public RadioButtonGroup<String> getColorCondition() {
+    public RadioButtonGroup<Double> getColorCondition() {
         return colorCondition;
     }
 
-    public void setColorCondition(RadioButtonGroup<String> colorCondition) {
+    public void setColorCondition(RadioButtonGroup<Double> colorCondition) {
         this.colorCondition = colorCondition;
     }
 
-    public RadioButtonGroup<String> getVisitCondition() {
+    public RadioButtonGroup<Double> getVisitCondition() {
         return visitCondition;
     }
 
-    public void setVisitCondition(RadioButtonGroup<String> visitCondition) {
+    public void setVisitCondition(RadioButtonGroup<Double> visitCondition) {
         this.visitCondition = visitCondition;
     }
 
@@ -571,39 +611,9 @@ public class FahrzeugSection extends FormLayout {
         fahrzeugBinder.readBean(fahrzeug);
     }
 
-    public static abstract class FahrzeugSectionEvent extends ComponentEvent<FahrzeugSection> {
-        private Fahrzeug fahrzeug;
-
-        protected FahrzeugSectionEvent(FahrzeugSection source, Fahrzeug fahrzeug) {
-            super(source, false);
-            this.fahrzeug = fahrzeug;
-        }
-
-        public Fahrzeug getFahrzeug() {
-            return fahrzeug;
-        }
-    }
-
-    public static class SaveFahrzeugEvent extends FahrzeugSectionEvent {
-        SaveFahrzeugEvent(FahrzeugSection source, Fahrzeug fahrzeug) {
-            super(source, fahrzeug);
-        }
-    }
 
 
-    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
-                                                                  ComponentEventListener<T> listener) {
-        return getEventBus().addListener(eventType, listener);
-    }
 
-    public void validateAndSaveFahrzeug() {
-        try {
-            fahrzeugBinder.writeBean(fahrzeug);
-            fireEvent(new SaveFahrzeugEvent(this, fahrzeug));
-        } catch (ValidationException e) {
-            e.printStackTrace();
-        }
-    }
 
     public Fahrzeug getFahrzeug() {
         return fahrzeug;
@@ -616,5 +626,31 @@ public class FahrzeugSection extends FormLayout {
     public void setFahrzeugBinder(Binder<Fahrzeug> fahrzeugBinder) {
         this.fahrzeugBinder = fahrzeugBinder;
     }
+
+    public Button getSave() {
+        return save;
+    }
+
+    public void setSave(Button save) {
+        this.save = save;
+    }
+
+    public Button getDelete() {
+        return delete;
+    }
+
+    public void setDelete(Button delete) {
+        this.delete = delete;
+    }
+
+    public Button getCancel() {
+        return cancel;
+    }
+
+    public void setCancel(Button cancel) {
+        this.cancel = cancel;
+    }
+
+
 }
 

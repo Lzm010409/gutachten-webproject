@@ -1,6 +1,7 @@
 package de.goll.data.service;
 
 import de.goll.data.entity.Auftrag;
+import de.goll.data.entity.Auftragsdetails;
 import de.goll.data.entity.Kunde;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,14 @@ public class KundeService {
 
     public int count() {
         return (int) repository.count();
+    }
+
+    public void saveKunde(Kunde kunde) {
+        if (kunde == null) {
+            System.err.println("Contact is null. Are you sure you have connected your form to the application?");
+            return;
+        }
+        repository.save(kunde);
     }
 
 }

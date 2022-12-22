@@ -2,6 +2,7 @@ package de.goll.data.service;
 
 import de.goll.data.entity.Auftrag;
 import de.goll.data.entity.Fahrzeug;
+import de.goll.data.entity.Kunde;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,4 +41,11 @@ public class FahrzeugService {
         return (int) repository.count();
     }
 
+    public void saveFahrzeug(Fahrzeug fahrzeug) {
+        if (fahrzeug == null) {
+            System.err.println("Contact is null. Are you sure you have connected your form to the application?");
+            return;
+        }
+        repository.save(fahrzeug);
+    }
 }

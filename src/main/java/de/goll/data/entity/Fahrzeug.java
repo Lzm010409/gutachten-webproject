@@ -1,45 +1,59 @@
 package de.goll.data.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "application_fahrzeug")
-public class Fahrzeug extends AbstractEntity {
+public class Fahrzeug  {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "FahrzeugUUID", updatable = false, nullable = false)
+    @Type(type = "uuid-char")
+    private UUID id;
     private String licensePlate;
 
     private String mileage;
-    private String vehicleArt;
+    private String vehicleKind;
+    private String vehicleType;
+    private String vehiclePapers;
     private String manufacturer;
     private String frontTire;
     private String hsntsn;
     private String rearTire;
     private String tireManufaturer;
+    private String tireDepth;
     private String fin;
     private String firstAdmission;
     private String lastAdmission;
     private String driveType;
-    private String pollutionBadge;
+    private String enviromentalBadge;
     private String power;
     private String fuel;
-    private String pollutionClass;
+    private String pollutantClass;
     private String displacement;
-    private String nextHU;
-    private String nextSP;
-    private double generalCount;
-    private double bodyCount;
+    private String hu;
+    private String sp;
+    private String mileageReadType;
+    private String vehicleColor;
+    private double generalCondition;
+    private double bodyCondition;
     private String preOwner;
-    private double colorCount;
-    private double visitCount;
+    private double colorCondition;
+    private double visitCondition;
     private String equipment;
     private String notFixedDamages;
     private String fixedDamages;
+    private String fixedMinorDamages;
+    private String notFixedMinorDamages;
+    private String colorThickness;
+
 
     public Fahrzeug() {
     }
-
-
 
     public String getLicensePlate() {
         return licensePlate;
@@ -57,12 +71,12 @@ public class Fahrzeug extends AbstractEntity {
         this.mileage = mileage;
     }
 
-    public String getVehicleArt() {
-        return vehicleArt;
+    public String getVehicleKind() {
+        return vehicleKind;
     }
 
-    public void setVehicleArt(String vehicleArt) {
-        this.vehicleArt = vehicleArt;
+    public void setVehicleKind(String vehicleKind) {
+        this.vehicleKind = vehicleKind;
     }
 
     public String getManufacturer() {
@@ -137,12 +151,12 @@ public class Fahrzeug extends AbstractEntity {
         this.driveType = driveType;
     }
 
-    public String getPollutionBadge() {
-        return pollutionBadge;
+    public String getEnviromentalBadge() {
+        return enviromentalBadge;
     }
 
-    public void setPollutionBadge(String pollutionBadge) {
-        this.pollutionBadge = pollutionBadge;
+    public void setEnviromentalBadge(String enviromentalBadge) {
+        this.enviromentalBadge = enviromentalBadge;
     }
 
     public String getPower() {
@@ -161,12 +175,12 @@ public class Fahrzeug extends AbstractEntity {
         this.fuel = fuel;
     }
 
-    public String getPollutionClass() {
-        return pollutionClass;
+    public String getPollutantClass() {
+        return pollutantClass;
     }
 
-    public void setPollutionClass(String pollutionClass) {
-        this.pollutionClass = pollutionClass;
+    public void setPollutantClass(String pollutantClass) {
+        this.pollutantClass = pollutantClass;
     }
 
     public String getDisplacement() {
@@ -177,36 +191,36 @@ public class Fahrzeug extends AbstractEntity {
         this.displacement = displacement;
     }
 
-    public String getNextHU() {
-        return nextHU;
+    public String getHu() {
+        return hu;
     }
 
-    public void setNextHU(String nextHU) {
-        this.nextHU = nextHU;
+    public void setHu(String hu) {
+        this.hu = hu;
     }
 
-    public String getNextSP() {
-        return nextSP;
+    public String getSp() {
+        return sp;
     }
 
-    public void setNextSP(String nextSP) {
-        this.nextSP = nextSP;
+    public void setSp(String sp) {
+        this.sp = sp;
     }
 
-    public double getGeneralCount() {
-        return generalCount;
+    public double getGeneralCondition() {
+        return generalCondition;
     }
 
-    public void setGeneralCount(double generalCount) {
-        this.generalCount = generalCount;
+    public void setGeneralCondition(double generalCondition) {
+        this.generalCondition = generalCondition;
     }
 
-    public double getBodyCount() {
-        return bodyCount;
+    public double getBodyCondition() {
+        return bodyCondition;
     }
 
-    public void setBodyCount(double bodyCount) {
-        this.bodyCount = bodyCount;
+    public void setBodyCondition(double bodyCondition) {
+        this.bodyCondition = bodyCondition;
     }
 
     public String getPreOwner() {
@@ -217,20 +231,20 @@ public class Fahrzeug extends AbstractEntity {
         this.preOwner = preOwner;
     }
 
-    public double getColorCount() {
-        return colorCount;
+    public double getColorCondition() {
+        return colorCondition;
     }
 
-    public void setColorCount(double colorCount) {
-        this.colorCount = colorCount;
+    public void setColorCondition(double colorCondition) {
+        this.colorCondition = colorCondition;
     }
 
-    public double getVisitCount() {
-        return visitCount;
+    public double getVisitCondition() {
+        return visitCondition;
     }
 
-    public void setVisitCount(double visitCount) {
-        this.visitCount = visitCount;
+    public void setVisitCondition(double visitCondition) {
+        this.visitCondition = visitCondition;
     }
 
     public String getEquipment() {
@@ -255,5 +269,69 @@ public class Fahrzeug extends AbstractEntity {
 
     public void setFixedDamages(String fixedDamages) {
         this.fixedDamages = fixedDamages;
+    }
+
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
+    }
+
+    public String getVehiclePapers() {
+        return vehiclePapers;
+    }
+
+    public void setVehiclePapers(String vehiclePapers) {
+        this.vehiclePapers = vehiclePapers;
+    }
+
+    public String getTireDepth() {
+        return tireDepth;
+    }
+
+    public void setTireDepth(String tireDepth) {
+        this.tireDepth = tireDepth;
+    }
+
+    public String getMileageReadType() {
+        return mileageReadType;
+    }
+
+    public void setMileageReadType(String mileageReadType) {
+        this.mileageReadType = mileageReadType;
+    }
+
+    public String getVehicleColor() {
+        return vehicleColor;
+    }
+
+    public void setVehicleColor(String vehicleColor) {
+        this.vehicleColor = vehicleColor;
+    }
+
+    public String getFixedMinorDamages() {
+        return fixedMinorDamages;
+    }
+
+    public void setFixedMinorDamages(String fixedMinorDamages) {
+        this.fixedMinorDamages = fixedMinorDamages;
+    }
+
+    public String getNotFixedMinorDamages() {
+        return notFixedMinorDamages;
+    }
+
+    public void setNotFixedMinorDamages(String notFixedMinorDamages) {
+        this.notFixedMinorDamages = notFixedMinorDamages;
+    }
+
+    public String getColorThickness() {
+        return colorThickness;
+    }
+
+    public void setColorThickness(String colorThickness) {
+        this.colorThickness = colorThickness;
     }
 }
