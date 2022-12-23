@@ -7,13 +7,14 @@ import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
 @Entity
-@Table(name = "application_kunde")
-public class Kunde {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "KundeUUID", updatable = false, nullable = false)
-    @Type(type = "uuid-char")
-    private UUID id;
+@Table(name = "kunde")
+public class Kunde extends AbstractEntity {
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private Auftrag auftrag;
+
+
+    private String anrede;
     @NotBlank
     private String name;
 
@@ -26,22 +27,30 @@ public class Kunde {
     @NotBlank
     private String city;
 
-    @NotBlank
+
     private String email;
 
-    @NotBlank
+
     private String tel;
 
-    public Kunde(){
+    public Kunde() {
 
     }
 
-    public UUID getId() {
-        return id;
+    public String getAnrede() {
+        return anrede;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setAnrede(String anrede) {
+        this.anrede = anrede;
+    }
+
+    public Auftrag getAuftrag() {
+        return auftrag;
+    }
+
+    public void setAuftrag(Auftrag auftrag) {
+        this.auftrag = auftrag;
     }
 
     public String getName() {

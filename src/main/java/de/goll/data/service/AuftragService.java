@@ -2,12 +2,14 @@ package de.goll.data.service;
 
 import de.goll.data.entity.Auftrag;
 import de.goll.data.entity.Fahrzeug;
+import de.goll.data.entity.Kunde;
 import de.goll.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,6 +49,12 @@ public class AuftragService {
             return;
         }
         repository.save(auftrag);
+    }
+
+    public List<Auftrag> findAllAuftraege() {
+
+        return repository.findAll();
+
     }
 
 }

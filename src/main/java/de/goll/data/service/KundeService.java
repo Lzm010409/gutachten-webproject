@@ -1,7 +1,5 @@
 package de.goll.data.service;
 
-import de.goll.data.entity.Auftrag;
-import de.goll.data.entity.Auftragsdetails;
 import de.goll.data.entity.Kunde;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

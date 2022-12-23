@@ -10,7 +10,9 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import de.goll.components.aufnahmebogen.AuftragsSection;
 import de.goll.data.entity.Auftrag;
+import de.goll.data.service.AuftragService;
 import de.goll.views.MainLayout;
 
 import javax.annotation.security.RolesAllowed;
@@ -22,23 +24,42 @@ import javax.annotation.security.RolesAllowed;
 public class AuftragsübersichtView extends VerticalLayout {
 
     Grid<Auftrag> grid = new Grid<>(Auftrag.class);
+    AuftragService auftragService;
 
-    public AuftragsübersichtView() {
+    AuftragsSection auftragsSection;
+
+    public AuftragsübersichtView(AuftragService auftragService) {
+        this.auftragService = auftragService;
+        auftragsSection = new AuftragsSection();
         addClassName("list-view");
         setSizeFull();
         configureGrid();
-
         add(grid);
+        updateList();
     }
-    TextField filterText = new TextField();
 
+    TextField filterText = new TextField();
 
 
     private void configureGrid() {
         grid.addClassNames("contact-grid");
         grid.setSizeFull();
-        grid.setColumns("auftragsNummer", "kundeName", "rechtsanwaltName");
+        grid.setColumns("auftragsNummer");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
+        grid.asSingleSelect().addValueChangeListener(event ->
+                editAuftrag(event.getValue()));
+    }
+
+    public void editAuftrag(Auftrag auftrag) {
+        if (auftrag != null) {
+            auftragsSection.setAuftrag(auftrag);
+            addClassName("editing");
+        }
+
+    }
+
+    private void updateList() {
+        grid.setItems(auftragService.findAllAuftraege());
     }
 
    /* private HorizontalLayout getToolbar() {
@@ -52,11 +73,6 @@ public class AuftragsübersichtView extends VerticalLayout {
         toolbar.addClassName("toolbar");
         return toolbar;
     }*/
-
-
-
-
-
 
 
 }

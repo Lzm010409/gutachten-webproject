@@ -1,15 +1,14 @@
 package de.goll.data.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "application_rechtsanwaelte")
+@Table(name = "rechtsanwaelte")
 public class Rechtsanwalt extends AbstractEntity {
-
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private Auftrag auftrag;
     @NotBlank
     private String name;
 
@@ -31,6 +30,14 @@ public class Rechtsanwalt extends AbstractEntity {
 
     public Rechtsanwalt(){
 
+    }
+
+    public Auftrag getAuftrag() {
+        return auftrag;
+    }
+
+    public void setAuftrag(Auftrag auftrag) {
+        this.auftrag = auftrag;
     }
 
     public String getName() {

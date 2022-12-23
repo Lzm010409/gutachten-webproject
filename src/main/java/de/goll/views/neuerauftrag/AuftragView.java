@@ -1,11 +1,18 @@
 package de.goll.views.neuerauftrag;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import de.goll.components.abtrittserklärung.AbtrittserklärungSection;
 import de.goll.components.aufnahmebogen.*;
+import de.goll.data.entity.Auftrag;
+import de.goll.data.entity.Fahrzeug;
+import de.goll.data.entity.Kunde;
 import de.goll.data.service.*;
 import de.goll.views.MainLayout;
 
@@ -15,12 +22,10 @@ import javax.annotation.security.RolesAllowed;
 @Route(value = "neuerauftrag", layout = MainLayout.class)
 @RolesAllowed("USER")
 public class AuftragView extends VerticalLayout {
-    AuftragsdetailsSection auftragsdetailsSection;
+    AuftragsSection auftragsSection;
     KundeSection kundeSection = new KundeSection();
 
     FahrzeugSection fahrzeugSection;
-
-    AuftragsDetailsService auftragsDetailsService;
 
     AuftragService auftragService;
     KundeService kundeService;
@@ -29,65 +34,84 @@ public class AuftragView extends VerticalLayout {
 
     AbtrittserklärungSection abtrittserklärungSection = new AbtrittserklärungSection();
 
+    private Auftrag auftrag = new Auftrag();
+    private Fahrzeug fahrzeug = new Fahrzeug();
+    private Kunde kunde = new Kunde();
+
+    Button save = new Button("Sichern");
+    Button delete = new Button("Löschen");
+    Button cancel = new Button("Abbrechen");
+
     public AuftragView(AuftragService auftragService,
                        KundeService kundeService,
                        RechtsanwaltService rechtsanwaltService,
-                       FahrzeugService fahrzeugService,
-                       AuftragsDetailsService auftragsDetailsService) {
+                       FahrzeugService fahrzeugService) {
         this.auftragService = auftragService;
         this.kundeService = kundeService;
         this.rechtsanwaltService = rechtsanwaltService;
         this.fahrzeugService = fahrzeugService;
-        this.auftragsDetailsService = auftragsDetailsService;
-        configureFahrzeugSection();
-        configureHeadSection();
-        configureKundeSection();
+        //configureFahrzeugSection();
+        configureAuftragsSection();
+        // configureKundeSection();
+        add(createButtonLayout());
 
         TabSheet tabSheet = new TabSheet();
-        tabSheet.add("Auftragsdetails", auftragsdetailsSection);
-        tabSheet.add("Kundendetails", kundeSection);
-        tabSheet.add("Fahrzeugdetails", fahrzeugSection);
-        tabSheet.add("Schadendetails", auftragsdetailsSection.createSchadenDetails());
+        tabSheet.add("Auftragsdetails", auftragsSection.createAuftragsDetails());
+        tabSheet.add("Kundendetails", auftragsSection.createKundenSection());
+        tabSheet.add("Fahrzeugdetails", auftragsSection.createFahrzeugSection());
+        tabSheet.add("Schadendetails", auftragsSection.createSchadenDetails());
         tabSheet.add("Abtrittserklärung", abtrittserklärungSection.configureAbtrittserklärungSection());
         add(tabSheet);
 
     }
 
-    private void configureFahrzeugSection() {
-        fahrzeugSection = new FahrzeugSection();
-        fahrzeugSection.addListener(FahrzeugSection.SaveFahrzeugEvent.class, this::saveFahrzeug);
+    public Component createButtonLayout() {
+        save.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        HorizontalLayout horizontalLayout = new HorizontalLayout(save, delete, cancel);
+
+        save.addClickListener(buttonClickEvent -> auftragsSection.validateAndSaveAuftrag());
+        auftragsSection.getAuftragsdetailsBinder().addStatusChangeListener(e -> save.setEnabled(auftragsSection.getAuftragsdetailsBinder().isValid()));
+        return horizontalLayout;
     }
 
-    private void configureHeadSection() {
-        auftragsdetailsSection = new AuftragsdetailsSection();
-        auftragsdetailsSection.addListener(AuftragsdetailsSection.SaveAuftragdetailsEvent.class, this::saveAuftragdetails);
+    /*  private void configureFahrzeugSection() {
+          fahrzeugSection = new FahrzeugSection();
+          fahrzeugSection.addListener(FahrzeugSection.SaveFahrzeugEvent.class, this::saveFahrzeug);
+      }
+  */
+    private void configureAuftragsSection() {
+        auftragsSection = new AuftragsSection();
+        auftragsSection.addListener(AuftragsSection.SaveAuftragEvent.class, this::saveAuftrag);
     }
 
-    private void configureKundeSection() {
+   /* private void configureKundeSection() {
         kundeSection = new KundeSection();
         kundeSection.addListener(KundeSection.SaveKundeEvent.class, this::saveKunde);
-    }
+    }*/
 
-    public void saveFahrzeug(FahrzeugSection.SaveFahrzeugEvent event) {
+    /*public void saveFahrzeug(FahrzeugSection.SaveFahrzeugEvent event) {
         fahrzeugService.saveFahrzeug(event.getFahrzeug());
+        setFahrzeug(event.getFahrzeug());
+    }*/
 
+    public void saveAuftrag(AuftragsSection.SaveAuftragEvent event) {
+        auftragService.saveAuftrag(event.getAuftrag());
     }
 
-    public void saveAuftragdetails(AuftragsdetailsSection.SaveAuftragdetailsEvent event) {
-        auftragsDetailsService.saveAuftragdetails(event.getAuftragsdetails());
-    }
-
-    public void saveKunde(KundeSection.SaveKundeEvent event) {
+   /* public void saveKunde(KundeSection.SaveKundeEvent event) {
         kundeService.saveKunde(event.getKunde());
+        setKunde(event.getKunde());
+    }*/
+
+
+    public AuftragsSection getAuftragsSection() {
+        return auftragsSection;
     }
 
-
-    public AuftragsdetailsSection getAuftragsdetailsSection() {
-        return auftragsdetailsSection;
-    }
-
-    public void setAuftragsdetailsSection(AuftragsdetailsSection auftragsdetailsSection) {
-        this.auftragsdetailsSection = auftragsdetailsSection;
+    public void setAuftragsSection(AuftragsSection auftragsSection) {
+        this.auftragsSection = auftragsSection;
     }
 
     public KundeSection getKundeSection() {
@@ -136,5 +160,61 @@ public class AuftragView extends VerticalLayout {
 
     public void setAbtrittserklärungSection(AbtrittserklärungSection abtrittserklärungSection) {
         this.abtrittserklärungSection = abtrittserklärungSection;
+    }
+
+    public FahrzeugSection getFahrzeugSection() {
+        return fahrzeugSection;
+    }
+
+    public void setFahrzeugSection(FahrzeugSection fahrzeugSection) {
+        this.fahrzeugSection = fahrzeugSection;
+    }
+
+    public Auftrag getAuftrag() {
+        return auftrag;
+    }
+
+    public void setAuftrag(Auftrag auftrag) {
+        this.auftrag = auftrag;
+    }
+
+    public Button getSave() {
+        return save;
+    }
+
+    public void setSave(Button save) {
+        this.save = save;
+    }
+
+    public Button getDelete() {
+        return delete;
+    }
+
+    public void setDelete(Button delete) {
+        this.delete = delete;
+    }
+
+    public Button getCancel() {
+        return cancel;
+    }
+
+    public void setCancel(Button cancel) {
+        this.cancel = cancel;
+    }
+
+    public Fahrzeug getFahrzeug() {
+        return fahrzeug;
+    }
+
+    public void setFahrzeug(Fahrzeug fahrzeug) {
+        this.fahrzeug = fahrzeug;
+    }
+
+    public Kunde getKunde() {
+        return kunde;
+    }
+
+    public void setKunde(Kunde kunde) {
+        this.kunde = kunde;
     }
 }

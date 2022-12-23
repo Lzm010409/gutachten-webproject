@@ -6,14 +6,13 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "application_fahrzeug")
-public class Fahrzeug  {
+@Table(name = "fahrzeug")
+public class Fahrzeug extends AbstractEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "FahrzeugUUID", updatable = false, nullable = false)
-    @Type(type = "uuid-char")
-    private UUID id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private Auftrag auftrag;
     private String licensePlate;
 
     private String mileage;
@@ -53,6 +52,15 @@ public class Fahrzeug  {
 
 
     public Fahrzeug() {
+    }
+
+
+    public Auftrag getAuftrag() {
+        return auftrag;
+    }
+
+    public void setAuftrag(Auftrag auftrag) {
+        this.auftrag = auftrag;
     }
 
     public String getLicensePlate() {
